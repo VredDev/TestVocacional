@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test Vocacional | Descubre tu Carrera Ideal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Encabezado con espacio reservado (recuadro blanco) arriba a la derecha para el logo -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <span class="header-kicker">Orientación Profesional</span>
+        <h1 class="header-title">Test Vocacional</h1>
+      </div>
+
+      <!--
+        RECUADRO BLANCO PARA EL LOGO DE LA UNIVERSIDAD
+        Para agregar tu logo, reemplaza el div .logo-placeholder-inner por:
+        <img src="ruta-de-tu-logo.png" alt="Logo Universidad" />
+      -->
+      <div class="logo-box" id="university-logo-box" aria-label="Espacio para logo de la universidad">
+        <div class="logo-placeholder-inner">Logo Universidad</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+
+    <!-- 1. PANTALLA DE BIENVENIDA -->
+    <section id="welcome-view" class="view-section">
+      <div class="welcome-card">
+        <div class="welcome-badge">
+          <span class="welcome-badge-dot"></span>
+          Evaluación de Perfil Vocacional
+        </div>
+        <h2 class="welcome-title">Descubre la carrera que mejor conecta contigo</h2>
+        <p class="welcome-description">
+          Responde con sinceridad cada pregunta según tus intereses, habilidades, personalidad y metas.
+          Al finalizar, conocerás tu carrera principal recomendada y otras 6 opciones compatibles con tu perfil.
+        </p>
+
+        <div class="welcome-stats">
+          <div class="stat-item">
+            <span class="stat-number">40</span>
+            <span class="stat-label">Preguntas</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">26</span>
+            <span class="stat-label">Programas</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">~6 min</span>
+            <span class="stat-label">Duración aprox.</span>
+          </div>
+        </div>
+
+        <button type="button" id="start-btn" class="btn btn-primary btn-lg">
+          Comenzar test
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 2. FORMULARIO DEL TEST (PREGUNTAS CENTRADAS CON TRANSICIÓN DE TARJETAS) -->
+    <section id="quiz-view" class="view-section hidden" aria-live="polite">
+
+      <!-- Barra de progreso de preguntas contestadas -->
+      <div class="progress-wrapper">
+        <div class="progress-meta">
+          <span id="progress-step-label" class="progress-step">Pregunta 1 de 40</span>
+          <span id="progress-answered-label" class="progress-answered">0 de 40 contestadas (0%)</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="40" aria-valuenow="0" id="progress-bar-role">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+      </div>
+
+      <!-- Escenario de la tarjeta con animación lateral -->
+      <div class="card-stage">
+        <article id="question-card" class="question-card">
+          <span id="category-pill" class="category-pill">Categoría 1 · Tus intereses</span>
+          <span id="question-number" class="question-number-tag">Pregunta 1</span>
+          <h2 id="question-text" class="question-text"></h2>
+
+          <div id="options-list" class="options-list" role="radiogroup" aria-labelledby="question-text"></div>
+
+          <p id="validation-msg" class="validation-msg" role="alert">
+            Por favor selecciona una respuesta para continuar.
+          </p>
+
+          <div class="card-actions">
+            <button type="button" id="prev-btn" class="btn btn-secondary">
+              <span aria-hidden="true">←</span>
+              Anterior
+            </button>
+            <button type="button" id="next-btn" class="btn btn-primary">
+              Siguiente
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 3. PANTALLA DE RESULTADOS -->
+    <section id="results-view" class="view-section hidden">
+      <div class="results-wrapper">
+
+        <!-- Carrera principal destacada con barra circular grande -->
+        <div class="primary-result-card">
+          <span class="result-kicker">Tu carrera principal recomendada</span>
+          <span id="primary-area-badge" class="result-area-badge"></span>
+
+          <div class="ring-hero-container" id="primary-ring-container"></div>
+
+          <h2 id="primary-career-title" class="primary-career-title"></h2>
+          <div id="primary-traits-list" class="traits-list"></div>
+          <p id="primary-career-desc" class="primary-career-desc"></p>
+
+          <a id="primary-career-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">
+            Conocer esta carrera
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+
+        <!-- Otras 6 carreras compatibles en gráficas de círculos -->
+        <div class="secondary-results-card">
+          <div class="secondary-header">
+            <h3 id="secondary-title" class="secondary-title">Otras 6 carreras compatibles contigo</h3>
+            <p class="secondary-subtitle">
+              Explora tu porcentaje de afinidad en otras opciones de acuerdo con tus respuestas
+            </p>
+          </div>
+          <div id="secondary-grid" class="secondary-grid"></div>
+        </div>
+
+        <div class="results-footer-actions">
+          <button type="button" id="retake-btn" class="btn btn-secondary">
+            ↻ Volver a realizar el test
+          </button>
+          <button type="button" id="print-btn" class="btn btn-primary">
+            Imprimir / Guardar resultados
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    Test Vocacional Interactivo · Orientación Educativa y Profesional
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ============================================================
+         CATÁLOGO DE 26 CARRERAS (6 ÁREAS)
+         ============================================================ */
+      const CAREERS = [
+        // CIENCIAS DE LA SALUD (Área A)
+        {
+          id: 'estomatologia',
+          name: 'Estomatología',
+          area: 'Ciencias de la Salud',
+          level: 'grado',
+          primaryKey: 'A',
+          areaWeights: { A: 1.0, B: 0.08, C: 0.05, D: 0.05, E: 0.14 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/licenciatura-en-estomatologia/',
+          traits: ['Vocación clínica', 'Salud física', 'Precisión', 'Ciencias biológicas', 'Atención directa'],
+          description:
+            'Tu perfil muestra una gran sensibilidad hacia el cuidado de la salud física y el bienestar integral de las personas. En Estomatología combinarás conocimientos científicos, destreza clínica y trato humano para transformar sonrisas y mejorar la calidad de vida.'
+        },
+        {
+          id: 'psicologia',
+          name: 'Psicología',
+          area: 'Ciencias de la Salud',
+          level: 'grado',
+          primaryKey: 'A',
+          areaWeights: { A: 1.0, B: 0.08, C: 0.18, D: 0.08, E: 0.04 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/lic-en-psicologia/',
+          traits: ['Empático', 'Escucha activa', 'Salud emocional', 'Comprensión humana', 'Orientación'],
+          description:
+            'Destacas por tu empatía, paciencia y deseo genuino de comprender la mente y las emociones humanas. Psicología te brindará las herramientas científicas y clínicas para acompañar procesos de bienestar personal, educativo y organizacional.'
+        },
+
+        // CIENCIAS Y ARTES PARA EL DISEÑO (Área B)
+        {
+          id: 'arquitectura',
+          name: 'Arquitectura',
+          area: 'Ciencias y Artes para el Diseño',
+          level: 'grado',
+          primaryKey: 'B',
+          areaWeights: { A: 0.05, B: 1.0, C: 0.06, D: 0.10, E: 0.18 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/licenciatura-en-arquitectura/',
+          traits: ['Visión espacial', 'Diseño estructural', 'Creatividad técnica', 'Espacios funcionales', 'Innovación urbana'],
+          description:
+            'Tienes la capacidad de imaginar ideas y materializarlas en espacios habitables, funcionales y estéticos. Arquitectura te permitirá proyectar edificios y entornos urbanos que mejoren la forma en que vivimos.'
+        },
+        {
+          id: 'arq_interiores',
+          name: 'Arquitectura de Interiores y Ambientación',
+          area: 'Ciencias y Artes para el Diseño',
+          level: 'grado',
+          primaryKey: 'B',
+          areaWeights: { A: 0.10, B: 1.0, C: 0.05, D: 0.12, E: 0.08 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/arquitecturadeinteriores-2/',
+          traits: ['Ambientación', 'Estética funcional', 'Transformación', 'Sensibilidad visual', 'Diseño de espacios'],
+          description:
+            'Posees un ojo especial para los detalles, la armonía, el color y el aprovechamiento de cada lugar. Arquitectura de Interiores y Ambientación potenciará tu creatividad para transformar espacios en experiencias memorables.'
+        },
+        {
+          id: 'diseno_grafico',
+          name: 'Diseño Gráfico y Comunicación Visual',
+          area: 'Ciencias y Artes para el Diseño',
+          level: 'grado',
+          primaryKey: 'B',
+          areaWeights: { A: 0.05, B: 1.0, C: 0.08, D: 0.14, E: 0.14 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/licenciatura-diseno-grafico/',
+          traits: ['Identidad visual', 'Ilustración', 'Comunicación creativa', 'Diseño digital', 'Originalidad'],
+          description:
+            'Tu forma de ver el mundo se expresa a través de imágenes, conceptos visuales e ideas originales. Diseño Gráfico y Comunicación Visual te preparará para crear marcas, campañas y propuestas visuales de alto impacto.'
+        },
+
+        // CIENCIAS SOCIALES (Área C)
+        {
+          id: 'derecho',
+          name: 'Derecho',
+          area: 'Ciencias Sociales',
+          level: 'grado',
+          primaryKey: 'C',
+          areaWeights: { A: 0.08, B: 0.04, C: 1.0, D: 0.18, E: 0.05 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/licenciatura-en-derecho/',
+          traits: ['Argumentación', 'Sentido de justicia', 'Análisis legal', 'Ética', 'Defensa de causas'],
+          description:
+            'Sobresales por tu pensamiento crítico, tu capacidad de argumentar y tu compromiso con la justicia. La Licenciatura en Derecho te formará para defender causas, interpretar leyes y construir soluciones jurídicas sólidas.'
+        },
+        {
+          id: 'criminologia',
+          name: 'Criminología',
+          area: 'Ciencias Sociales',
+          level: 'grado',
+          primaryKey: 'C',
+          areaWeights: { A: 0.14, B: 0.04, C: 1.0, D: 0.05, E: 0.12 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/licenciatura-en-criminologia/',
+          traits: ['Investigador', 'Observador', 'Análisis de casos', 'Prevención social', 'Pensamiento analítico'],
+          description:
+            'Te apasiona descubrir las causas detrás de los hechos y analizar situaciones complejas con rigor. Criminología te abrirá las puertas al estudio de la conducta antisocial, la investigación y la prevención en favor de la seguridad.'
+        },
+        {
+          id: 'pedagogia',
+          name: 'Pedagogía',
+          area: 'Ciencias Sociales',
+          level: 'grado',
+          primaryKey: 'C',
+          areaWeights: { A: 0.24, B: 0.10, C: 0.95, D: 0.10, E: 0.04 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/pedagogia/',
+          traits: ['Vocación educativa', 'Formación humana', 'Guía', 'Impacto social', 'Comunicación'],
+          description:
+            'Combinas sensibilidad humana con el deseo de construir una sociedad más preparada. Pedagogía te permitirá diseñar estrategias de enseñanza, orientar el aprendizaje y transformar vidas a través de la educación.'
+        },
+        {
+          id: 'lenguas',
+          name: 'Lenguas Extranjeras',
+          area: 'Ciencias Sociales',
+          level: 'grado',
+          primaryKey: 'C',
+          areaWeights: { A: 0.10, B: 0.12, C: 0.95, D: 0.16, E: 0.05 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/licenciatura-en-lenguas-extranjeras/',
+          traits: ['Multicultural', 'Idiomas', 'Comunicación global', 'Lectura y cultura', 'Proyección internacional'],
+          description:
+            'Disfrutas aprender culturas, comunicarte con claridad y conectar con el mundo. Lenguas Extranjeras te brindará dominio lingüístico y herramientas culturales para destacar en ámbitos internacionales, educativos y corporativos.'
+        },
+
+        // NEGOCIOS (Área D)
+        {
+          id: 'administracion',
+          name: 'Administración de Empresas',
+          area: 'Negocios',
+          level: 'grado',
+          primaryKey: 'D',
+          areaWeights: { A: 0.08, B: 0.08, C: 0.12, D: 1.0, E: 0.10 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/administracion-de-empresas/',
+          traits: ['Liderazgo', 'Visión estratégica', 'Gestión de equipos', 'Emprendimiento', 'Toma de decisiones'],
+          description:
+            'Tienes iniciativa natural para coordinar equipos, trazar objetivos y liderar proyectos hacia el éxito. Administración de Empresas te dará las bases para dirigir organizaciones o impulsar tu propio emprendimiento.'
+        },
+        {
+          id: 'comercio',
+          name: 'Comercio Internacional',
+          area: 'Negocios',
+          level: 'grado',
+          primaryKey: 'D',
+          areaWeights: { A: 0.04, B: 0.05, C: 0.18, D: 1.0, E: 0.10 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/comercio-internacional/',
+          traits: ['Negocios globales', 'Negociación', 'Expansión comercial', 'Logística', 'Estrategia'],
+          description:
+            'Te motivan los retos de alcance global, la negociación y el crecimiento de las empresas más allá de las fronteras. Comercio Internacional te preparará para liderar operaciones de exportación, importación y mercados mundiales.'
+        },
+        {
+          id: 'contaduria',
+          name: 'Contaduría Pública',
+          area: 'Negocios',
+          level: 'grado',
+          primaryKey: 'D',
+          areaWeights: { A: 0.04, B: 0.03, C: 0.16, D: 1.0, E: 0.16 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/licenciatura-en-contaduria-publica/',
+          traits: ['Control financiero', 'Organización', 'Precisión', 'Responsabilidad fiscal', 'Análisis numérico'],
+          description:
+            'Destacas por tu orden, responsabilidad y capacidad para administrar recursos con claridad y rigor. Contaduría Pública te convertirá en un pilar estratégico para la salud financiera y fiscal de cualquier organización.'
+        },
+        {
+          id: 'finanzas',
+          name: 'Finanzas y Banca',
+          area: 'Negocios',
+          level: 'grado',
+          primaryKey: 'D',
+          areaWeights: { A: 0.03, B: 0.04, C: 0.12, D: 1.0, E: 0.20 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/licenciatura-en-finanzas-y-banca/',
+          traits: ['Inversiones', 'Análisis económico', 'Gestión de capital', 'Planeación', 'Resultados'],
+          description:
+            'Te atraen las decisiones estratégicas basadas en datos, la economía y el crecimiento del patrimonio. Finanzas y Banca te formará para analizar mercados, evaluar inversiones y dirigir estrategias financieras.'
+        },
+        {
+          id: 'mercadotecnia',
+          name: 'Mercadotecnia y Medios Digitales',
+          area: 'Negocios',
+          level: 'grado',
+          primaryKey: 'D',
+          areaWeights: { A: 0.08, B: 0.26, C: 0.08, D: 0.96, E: 0.12 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/licenciatura-en-mercadotecnia-y-medios-digitales/',
+          traits: ['Estrategia digital', 'Publicidad', 'Tendencias', 'Creatividad comercial', 'Posicionamiento'],
+          description:
+            'Unes visión comercial con creatividad e intuición para conectar marcas con personas. Mercadotecnia y Medios Digitales te impulsará a diseñar campañas innovadoras, estrategias digitales y marcas memorables.'
+        },
+        {
+          id: 'eventos',
+          name: 'Organización de Eventos y Experiencias',
+          area: 'Negocios',
+          level: 'grado',
+          primaryKey: 'D',
+          areaWeights: { A: 0.14, B: 0.24, C: 0.08, D: 0.96, E: 0.05 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/organizacion-de-eventos-y-experiencias/',
+          traits: ['Coordinación', 'Sociable', 'Logística creativa', 'Dirección de proyectos', 'Experiencias'],
+          description:
+            'Brillas organizando actividades, liderando equipos dinámicos y creando momentos inolvidables para los demás. Organización de Eventos y Experiencias une gestión empresarial con creatividad y relaciones públicas.'
+        },
+
+        // INGENIERÍAS (Área E)
+        {
+          id: 'animacion',
+          name: 'Animación Digital y Videojuegos',
+          area: 'Ingenierías',
+          level: 'grado',
+          primaryKey: 'E',
+          areaWeights: { A: 0.04, B: 0.34, C: 0.05, D: 0.06, E: 0.96 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/ingenieria-en-animacion-digital-y-videojuegos/',
+          traits: ['Videojuegos', 'Arte digital', 'Creatividad técnica', 'Narrativa interactiva', 'Innovación'],
+          description:
+            'Fusionas imaginación visual con pasión por la tecnología interactiva. Ingeniería en Animación Digital y Videojuegos te permitirá dar vida a mundos virtuales, personajes y experiencias digitales de nueva generación.'
+        },
+        {
+          id: 'ciberseguridad',
+          name: 'Ciberseguridad y telecomunicaciones',
+          area: 'Ingenierías',
+          level: 'grado',
+          primaryKey: 'E',
+          areaWeights: { A: 0.04, B: 0.04, C: 0.18, D: 0.08, E: 1.0 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/ingenieria-en-ciberseguridad-y-telecomunicaciones/',
+          traits: ['Protección digital', 'Redes y sistemas', 'Análisis técnico', 'Seguridad informática', 'Lógico'],
+          description:
+            'Tienes una mente lógica, analítica y curiosa por proteger y conectar la infraestructura digital. Ingeniería en Ciberseguridad y Telecomunicaciones te preparará para defender sistemas críticos y diseñar redes seguras.'
+        },
+        {
+          id: 'software',
+          name: 'Desarrollo de Aplicaciones y Software',
+          area: 'Ingenierías',
+          level: 'grado',
+          primaryKey: 'E',
+          areaWeights: { A: 0.04, B: 0.10, C: 0.08, D: 0.10, E: 1.0 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/ingenieria-en-desarrollo-de-software-y-aplicaciones/',
+          traits: ['Programación', 'Resolución lógica', 'Aplicaciones', 'Inteligencia artificial', 'Innovación digital'],
+          description:
+            'Disfrutas resolver problemas complejos mediante código, lógica e innovación constante. Ingeniería en Desarrollo de Aplicaciones y Software te capacitará para crear apps, sistemas inteligentes y tecnología que transforma el futuro.'
+        },
+        {
+          id: 'industrial',
+          name: 'Industrial y de Sistemas',
+          area: 'Ingenierías',
+          level: 'grado',
+          primaryKey: 'E',
+          areaWeights: { A: 0.05, B: 0.06, C: 0.10, D: 0.30, E: 0.96 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/ingenieria-industrial-y-de-sistemas/',
+          traits: ['Optimización', 'Eficiencia', 'Procesos industriales', 'Gestión técnica', 'Mejora continua'],
+          description:
+            'Combinas pensamiento técnico con habilidades de organización y enfoque en resultados. Ingeniería Industrial y de Sistemas te preparará para optimizar procesos, liderar operaciones y maximizar la eficiencia productiva.'
+        },
+        {
+          id: 'mecatronica',
+          name: 'Mecatrónica',
+          area: 'Ingenierías',
+          level: 'grado',
+          primaryKey: 'E',
+          areaWeights: { A: 0.04, B: 0.12, C: 0.05, D: 0.08, E: 1.0 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/ingenieria-en-mecatronica/',
+          traits: ['Robótica', 'Automatización', 'Ingeniería aplicada', 'Hardware y control', 'Curiosidad técnica'],
+          description:
+            'Te fascina entender cómo funcionan los aparatos y construir soluciones tecnológicas tangibles. Ingeniería en Mecatrónica integra mecánica, electrónica, robótica y programación para crear sistemas inteligentes.'
+        },
+
+        // POSGRADO
+        {
+          id: 'm_mba',
+          name: 'Maestría en Administración de Negocios',
+          area: 'Posgrado',
+          level: 'posgrado',
+          primaryKey: 'D',
+          areaWeights: { A: 0.08, B: 0.08, C: 0.16, D: 0.94, E: 0.16 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/maestria-en-administracion-de-negocios/',
+          traits: ['Alta dirección', 'Estrategia empresarial', 'Liderazgo ejecutivo', 'Crecimiento', 'Toma de decisiones'],
+          description:
+            'Tu perfil estratégico y orientado a metas encaja con la dirección de alto nivel. La Maestría en Administración de Negocios fortalece tu liderazgo ejecutivo para impulsar organizaciones competitivas y sostenibles.'
+        },
+        {
+          id: 'm_dir_edu',
+          name: 'Maestría en Dirección de Instituciones Educativas',
+          area: 'Posgrado',
+          level: 'posgrado',
+          primaryKey: 'C',
+          areaWeights: { A: 0.22, B: 0.06, C: 0.68, D: 0.62, E: 0.06 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/maestria-en-direccion-de-instituciones-educativas/',
+          traits: ['Gestión educativa', 'Liderazgo académico', 'Planeación', 'Organización', 'Impacto formativo'],
+          description:
+            'Reúnes vocación social y educativa junto con capacidad de organización y liderazgo. Esta maestría te prepara para dirigir centros educativos con visión estratégica, calidad humana y excelencia institucional.'
+        },
+        {
+          id: 'm_edu',
+          name: 'Maestría en Educación',
+          area: 'Posgrado',
+          level: 'posgrado',
+          primaryKey: 'C',
+          areaWeights: { A: 0.34, B: 0.12, C: 0.84, D: 0.14, E: 0.06 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/maestria-en-educacion/',
+          traits: ['Docencia avanzada', 'Innovación pedagógica', 'Investigación educativa', 'Vocación', 'Desarrollo humano'],
+          description:
+            'Tu empatía y compromiso con el aprendizaje te perfilan para liderar la transformación educativa. La Maestría en Educación te ofrece metodologías innovadoras e investigación aplicada para potenciar el talento humano.'
+        },
+        {
+          id: 'm_finanzas',
+          name: 'Maestría en Finanzas',
+          area: 'Posgrado',
+          level: 'posgrado',
+          primaryKey: 'D',
+          areaWeights: { A: 0.03, B: 0.04, C: 0.14, D: 0.92, E: 0.26 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/maestria-en-finanzas/',
+          traits: ['Estrategia financiera', 'Mercados de capital', 'Análisis de riesgo', 'Rentabilidad', 'Decisión analítica'],
+          description:
+            'Combinas visión de negocios con un sólido pensamiento analítico y numérico. La Maestría en Finanzas profundiza en valuación, gestión de riesgos y estrategias financieras corporativas de alto impacto.'
+        },
+        {
+          id: 'm_juicios',
+          name: 'Maestría en Juicios Orales',
+          area: 'Posgrado',
+          level: 'posgrado',
+          primaryKey: 'C',
+          areaWeights: { A: 0.08, B: 0.04, C: 0.94, D: 0.20, E: 0.05 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/maestria-en-juicios-orales/',
+          traits: ['Litigación oral', 'Argumentación jurídica', 'Justicia', 'Análisis legal', 'Decisión'],
+          description:
+            'Tu capacidad de análisis, elocuencia y compromiso con la justicia se alinean con la práctica procesal moderna. La Maestría en Juicios Orales perfecciona tus destrezas de litigación y argumentación jurídica.'
+        },
+        {
+          id: 'm_logistica',
+          name: 'Maestría en Logística y Gestión Estratégica de la Cadena de Suministro',
+          area: 'Posgrado',
+          level: 'posgrado',
+          primaryKey: 'D',
+          areaWeights: { A: 0.04, B: 0.05, C: 0.12, D: 0.68, E: 0.62 },
+          url: 'https://upotosina.edu.mx/oferta-educativa/maestria-en-logistica-y-gestion-estrategica-de-la-cadena-de-suministro/',
+          traits: ['Cadena de suministro', 'Logística global', 'Optimización', 'Gestión operativa', 'Eficiencia'],
+          description:
+            'Equilibras mentalidad empresarial con enfoque técnico para resolver retos complejos de operación. Esta maestría te especializa en optimizar flujos globales, abastecimiento y estrategias logísticas competitivas.'
+        }
+      ];
+
+      /* ============================================================
+         BANCO COMPLETO DE 40 PREGUNTAS CON PONDERACIÓN ESPECÍFICA
+         ============================================================ */
+      const QUESTIONS = [
+        // Categoría 1. Tus intereses
+        {
+          id: 1,
+          category: 'Categoría 1 · Tus intereses',
+          text: 'Si pudieras elegir una actividad para realizar durante todo un día, ¿cuál escogerías?',
+          options: [
+            { key: 'A', text: 'Ayudar a alguien a mejorar su salud o bienestar.', boost: { estomatologia: 1.4, psicologia: 1.4 } },
+            { key: 'B', text: 'Crear dibujos, diseños, espacios o construcciones.', boost: { arquitectura: 1.5, arq_interiores: 1.4, diseno_grafico: 1.5 } },
+            { key: 'C', text: 'Investigar un caso o ayudar a resolver un problema social.', boost: { criminologia: 1.6, derecho: 1.4, pedagogia: 1.0, m_juicios: 1.2 } },
+            { key: 'D', text: 'Organizar un proyecto, dirigir un equipo o crear un negocio.', boost: { administracion: 1.6, m_mba: 1.4, eventos: 1.3, comercio: 1.1 } },
+            { key: 'E', text: 'Crear videojuegos, programar o experimentar con tecnología.', boost: { animacion: 1.6, software: 1.6, mecatronica: 1.2 } }
+          ]
+        },
+        {
+          id: 2,
+          category: 'Categoría 1 · Tus intereses',
+          text: '¿Qué tipo de contenido te gusta ver más en internet?',
+          options: [
+            { key: 'A', text: 'Psicología, salud, anatomía y bienestar.', boost: { psicologia: 1.6, estomatologia: 1.5 } },
+            { key: 'B', text: 'Arquitectura, ilustración, decoración y arte.', boost: { arquitectura: 1.5, diseno_grafico: 1.5, arq_interiores: 1.6 } },
+            { key: 'C', text: 'Crímenes, investigaciones, historia y temas sociales.', boost: { criminologia: 1.8, derecho: 1.2, pedagogia: 0.9 } },
+            { key: 'D', text: 'Emprendimiento, negocios, publicidad y finanzas.', boost: { mercadotecnia: 1.5, finanzas: 1.5, administracion: 1.4, m_finanzas: 1.3, m_mba: 1.2 } },
+            { key: 'E', text: 'Videojuegos, inteligencia artificial, tecnología y ciencia.', boost: { animacion: 1.5, software: 1.6, ciberseguridad: 1.2, mecatronica: 1.2 } }
+          ]
+        },
+        {
+          id: 3,
+          category: 'Categoría 1 · Tus intereses',
+          text: '¿Qué actividad te gustaría aprender aunque no fuera obligatoria?',
+          options: [
+            { key: 'A', text: 'Conocer cómo funciona el cuerpo y la mente humana.', boost: { estomatologia: 1.5, psicologia: 1.6 } },
+            { key: 'B', text: 'Aprender fotografía, ilustración o diseño de espacios.', boost: { diseno_grafico: 1.6, arq_interiores: 1.5, arquitectura: 1.2 } },
+            { key: 'C', text: 'Aprender sobre leyes, idiomas o investigación.', boost: { derecho: 1.5, lenguas: 1.8, criminologia: 1.4, m_juicios: 1.3 } },
+            { key: 'D', text: 'Aprender a administrar dinero y dirigir proyectos.', boost: { contaduria: 1.5, finanzas: 1.6, administracion: 1.4, m_finanzas: 1.4 } },
+            { key: 'E', text: 'Aprender programación, animación o robótica.', boost: { software: 1.6, animacion: 1.6, mecatronica: 1.7 } }
+          ]
+        },
+
+        // Categoría 2. Tus habilidades
+        {
+          id: 4,
+          category: 'Categoría 2 · Tus habilidades',
+          text: '¿Qué consideras que se te facilita más?',
+          options: [
+            { key: 'A', text: 'Escuchar, comprender y ayudar a otras personas.', boost: { psicologia: 1.7, pedagogia: 1.0, estomatologia: 1.1 } },
+            { key: 'B', text: 'Imaginar, dibujar y crear cosas nuevas.', boost: { diseno_grafico: 1.6, animacion: 1.2, arquitectura: 1.3, arq_interiores: 1.3 } },
+            { key: 'C', text: 'Analizar situaciones, investigar y argumentar.', boost: { derecho: 1.6, m_juicios: 1.6, criminologia: 1.5 } },
+            { key: 'D', text: 'Organizar, negociar y tomar decisiones.', boost: { comercio: 1.6, administracion: 1.5, m_mba: 1.4, eventos: 1.2 } },
+            { key: 'E', text: 'Resolver problemas técnicos y encontrar soluciones.', boost: { ciberseguridad: 1.5, software: 1.5, industrial: 1.4, mecatronica: 1.5 } }
+          ]
+        },
+        {
+          id: 5,
+          category: 'Categoría 2 · Tus habilidades',
+          text: 'Cuando trabajas en equipo, normalmente eres quien...',
+          options: [
+            { key: 'A', text: 'Se preocupa por que todos estén bien.', boost: { psicologia: 1.6, estomatologia: 1.2, m_edu: 0.9 } },
+            { key: 'B', text: 'Propone ideas creativas y diferentes.', boost: { diseno_grafico: 1.5, arq_interiores: 1.4, mercadotecnia: 1.1, animacion: 1.0 } },
+            { key: 'C', text: 'Investiga y analiza antes de tomar una decisión.', boost: { criminologia: 1.5, derecho: 1.4, pedagogia: 1.1 } },
+            { key: 'D', text: 'Organiza las tareas y coordina al equipo.', boost: { administracion: 1.5, eventos: 1.5, m_dir_edu: 1.3, m_logistica: 1.2 } },
+            { key: 'E', text: 'Busca cómo resolver los problemas técnicos.', boost: { software: 1.5, ciberseguridad: 1.5, mecatronica: 1.5, industrial: 1.3 } }
+          ]
+        },
+        {
+          id: 6,
+          category: 'Categoría 2 · Tus habilidades',
+          text: '¿Qué actividad te hace sentir más satisfecho?',
+          options: [
+            { key: 'A', text: 'Saber que ayudaste a alguien.', boost: { estomatologia: 1.4, psicologia: 1.5, pedagogia: 0.9 } },
+            { key: 'B', text: 'Ver una idea tuya convertida en algo real.', boost: { arquitectura: 1.6, arq_interiores: 1.5, diseno_grafico: 1.4 } },
+            { key: 'C', text: 'Resolver una situación complicada o defender una causa.', boost: { derecho: 1.6, m_juicios: 1.6, criminologia: 1.4 } },
+            { key: 'D', text: 'Alcanzar una meta o lograr que un proyecto tenga éxito.', boost: { administracion: 1.5, m_mba: 1.5, comercio: 1.3, eventos: 1.3 } },
+            { key: 'E', text: 'Crear algo tecnológico que funcione correctamente.', boost: { mecatronica: 1.6, software: 1.6, industrial: 1.3, ciberseguridad: 1.3 } }
+          ]
+        },
+
+        // Categoría 3. Tu personalidad
+        {
+          id: 7,
+          category: 'Categoría 3 · Tu personalidad',
+          text: '¿Cómo te describirías?',
+          options: [
+            { key: 'A', text: 'Empático, paciente y comprensivo.', boost: { psicologia: 1.7, estomatologia: 1.3, m_edu: 0.9 } },
+            { key: 'B', text: 'Creativo, curioso e imaginativo.', boost: { diseno_grafico: 1.5, arq_interiores: 1.5, arquitectura: 1.3, animacion: 1.1 } },
+            { key: 'C', text: 'Observador, analítico y reflexivo.', boost: { criminologia: 1.6, derecho: 1.3, pedagogia: 1.2, lenguas: 1.1 } },
+            { key: 'D', text: 'Sociable, organizado y decidido.', boost: { eventos: 1.6, administracion: 1.4, mercadotecnia: 1.4, comercio: 1.3 } },
+            { key: 'E', text: 'Lógico, práctico y curioso por la tecnología.', boost: { software: 1.5, ciberseguridad: 1.6, industrial: 1.4, mecatronica: 1.4 } }
+          ]
+        },
+        {
+          id: 8,
+          category: 'Categoría 3 · Tu personalidad',
+          text: '¿Qué situación te representa más?',
+          options: [
+            { key: 'A', text: 'Me gusta escuchar a mis amigos cuando tienen problemas.', boost: { psicologia: 1.8, estomatologia: 1.0 } },
+            { key: 'B', text: 'Siempre estoy pensando en cómo mejorar o transformar algo.', boost: { arq_interiores: 1.6, arquitectura: 1.5, industrial: 0.9 } },
+            { key: 'C', text: 'Me gusta conocer las razones detrás de las cosas.', boost: { criminologia: 1.6, derecho: 1.3, pedagogia: 1.2 } },
+            { key: 'D', text: 'Disfruto organizar actividades y tomar la iniciativa.', boost: { eventos: 1.7, administracion: 1.4, m_dir_edu: 1.2 } },
+            { key: 'E', text: 'Me gusta descubrir cómo funcionan los aparatos y programas.', boost: { mecatronica: 1.7, software: 1.6, ciberseguridad: 1.4 } }
+          ]
+        },
+        {
+          id: 9,
+          category: 'Categoría 3 · Tu personalidad',
+          text: '¿Qué ambiente de trabajo te gustaría tener?',
+          options: [
+            { key: 'A', text: 'Un consultorio, clínica o espacio de atención a personas.', boost: { estomatologia: 1.8, psicologia: 1.6 } },
+            { key: 'B', text: 'Un estudio creativo, despacho o espacio de diseño.', boost: { arquitectura: 1.6, diseno_grafico: 1.6, arq_interiores: 1.6 } },
+            { key: 'C', text: 'Una institución, despacho jurídico o centro de investigación.', boost: { derecho: 1.7, m_juicios: 1.6, criminologia: 1.5, pedagogia: 1.2 } },
+            { key: 'D', text: 'Una empresa, oficina o espacio de negocios.', boost: { administracion: 1.5, contaduria: 1.5, finanzas: 1.5, comercio: 1.4, m_mba: 1.4 } },
+            { key: 'E', text: 'Un laboratorio tecnológico, empresa de desarrollo o industria.', boost: { software: 1.5, industrial: 1.7, mecatronica: 1.6, ciberseguridad: 1.4, m_logistica: 1.2 } }
+          ]
+        },
+
+        // Categoría 4. Tu futuro profesional
+        {
+          id: 10,
+          category: 'Categoría 4 · Tu futuro profesional',
+          text: '¿Qué te gustaría lograr con tu profesión?',
+          options: [
+            { key: 'A', text: 'Mejorar la calidad de vida de las personas.', boost: { estomatologia: 1.6, psicologia: 1.5 } },
+            { key: 'B', text: 'Transformar ideas en proyectos visuales o espacios funcionales.', boost: { diseno_grafico: 1.6, arq_interiores: 1.6, arquitectura: 1.5 } },
+            { key: 'C', text: 'Contribuir a la justicia, educación o sociedad.', boost: { derecho: 1.5, pedagogia: 1.7, m_edu: 1.6, m_dir_edu: 1.4, m_juicios: 1.4 } },
+            { key: 'D', text: 'Crear oportunidades, administrar recursos o dirigir empresas.', boost: { contaduria: 1.5, administracion: 1.6, m_mba: 1.6, finanzas: 1.3 } },
+            { key: 'E', text: 'Desarrollar soluciones tecnológicas para el futuro.', boost: { software: 1.6, mecatronica: 1.5, ciberseguridad: 1.4, animacion: 1.2 } }
+          ]
+        },
+        {
+          id: 11,
+          category: 'Categoría 4 · Tu futuro profesional',
+          text: '¿Qué proyecto te emocionaría más realizar?',
+          options: [
+            { key: 'A', text: 'Abrir un consultorio o centro de atención.', boost: { estomatologia: 1.8, psicologia: 1.7 } },
+            { key: 'B', text: 'Diseñar una casa, una marca o una campaña visual.', boost: { arquitectura: 1.7, diseno_grafico: 1.7, mercadotecnia: 1.2, arq_interiores: 1.3 } },
+            { key: 'C', text: 'Participar en una investigación o defender un caso.', boost: { criminologia: 1.7, derecho: 1.7, m_juicios: 1.7 } },
+            { key: 'D', text: 'Crear una empresa o dirigir un evento importante.', boost: { eventos: 1.8, administracion: 1.6, m_mba: 1.4 } },
+            { key: 'E', text: 'Desarrollar una aplicación, videojuego o sistema inteligente.', boost: { software: 1.7, animacion: 1.7, mecatronica: 1.4, ciberseguridad: 1.3 } }
+          ]
+        },
+        {
+          id: 12,
+          category: 'Categoría 4 · Tu futuro profesional',
+          text: '¿Qué tipo de reto estarías dispuesto a enfrentar?',
+          options: [
+            { key: 'A', text: 'Atender las necesidades físicas y emocionales de las personas.', boost: { estomatologia: 1.6, psicologia: 1.6 } },
+            { key: 'B', text: 'Resolver problemas creativos y convertir ideas en propuestas.', boost: { diseno_grafico: 1.5, arq_interiores: 1.5, arquitectura: 1.4 } },
+            { key: 'C', text: 'Investigar situaciones complejas y buscar soluciones sociales.', boost: { criminologia: 1.6, pedagogia: 1.4, derecho: 1.3, m_edu: 1.2 } },
+            { key: 'D', text: 'Tomar decisiones importantes y administrar responsabilidades.', boost: { administracion: 1.5, contaduria: 1.5, finanzas: 1.4, m_mba: 1.5, m_dir_edu: 1.3 } },
+            { key: 'E', text: 'Resolver problemas tecnológicos y aprender nuevas herramientas.', boost: { software: 1.5, ciberseguridad: 1.6, mecatronica: 1.4, industrial: 1.3 } }
+          ]
+        },
+
+        // Categoría 5. Tus preferencias de aprendizaje
+        {
+          id: 13,
+          category: 'Categoría 5 · Tus preferencias de aprendizaje',
+          text: '¿Qué materia te llama más la atención?',
+          options: [
+            { key: 'A', text: 'Biología.', boost: { estomatologia: 1.9, psicologia: 1.3 } },
+            { key: 'B', text: 'Artes o dibujo.', boost: { diseno_grafico: 1.7, arquitectura: 1.5, arq_interiores: 1.5, animacion: 1.2 } },
+            { key: 'C', text: 'Historia o literatura.', boost: { lenguas: 1.6, pedagogia: 1.5, derecho: 1.4, m_edu: 1.3 } },
+            { key: 'D', text: 'Economía o matemáticas financieras.', boost: { finanzas: 1.9, m_finanzas: 1.8, contaduria: 1.7, comercio: 1.3 } },
+            { key: 'E', text: 'Física, matemáticas o informática.', boost: { mecatronica: 1.6, software: 1.6, ciberseguridad: 1.5, industrial: 1.6 } }
+          ]
+        },
+        {
+          id: 14,
+          category: 'Categoría 5 · Tus preferencias de aprendizaje',
+          text: '¿Cómo prefieres aprender algo nuevo?',
+          options: [
+            { key: 'A', text: 'Practicando y trabajando directamente con personas.', boost: { estomatologia: 1.5, psicologia: 1.5, pedagogia: 1.1 } },
+            { key: 'B', text: 'Experimentando, creando y haciendo proyectos.', boost: { arquitectura: 1.5, arq_interiores: 1.5, diseno_grafico: 1.5 } },
+            { key: 'C', text: 'Leyendo, investigando y debatiendo.', boost: { derecho: 1.6, m_juicios: 1.6, lenguas: 1.4, criminologia: 1.4 } },
+            { key: 'D', text: 'Organizando actividades y resolviendo situaciones reales.', boost: { eventos: 1.6, administracion: 1.5, m_logistica: 1.4, comercio: 1.3 } },
+            { key: 'E', text: 'Probando herramientas, programas y sistemas.', boost: { software: 1.6, ciberseguridad: 1.6, animacion: 1.4, mecatronica: 1.4 } }
+          ]
+        },
+        {
+          id: 15,
+          category: 'Categoría 5 · Tus preferencias de aprendizaje',
+          text: 'Si pudieras participar en un taller extracurricular, ¿cuál elegirías?',
+          options: [
+            { key: 'A', text: 'Primeros auxilios y bienestar emocional.', boost: { estomatologia: 1.7, psicologia: 1.7 } },
+            { key: 'B', text: 'Fotografía, arquitectura o diseño digital.', boost: { diseno_grafico: 1.7, arquitectura: 1.7, arq_interiores: 1.3 } },
+            { key: 'C', text: 'Debate, criminología o idiomas.', boost: { criminologia: 1.8, lenguas: 1.8, derecho: 1.5, m_juicios: 1.6 } },
+            { key: 'D', text: 'Emprendimiento, marketing o finanzas.', boost: { mercadotecnia: 1.8, finanzas: 1.7, m_finanzas: 1.6, administracion: 1.5 } },
+            { key: 'E', text: 'Programación, robótica o creación de videojuegos.', boost: { software: 1.7, mecatronica: 1.8, animacion: 1.8 } }
+          ]
+        },
+
+        // Categoría 6. Descubre tu motivación
+        {
+          id: 16,
+          category: 'Categoría 6 · Descubre tu motivación',
+          text: '¿Qué te motiva más cuando realizas una actividad?',
+          options: [
+            { key: 'A', text: 'Saber que estás ayudando a alguien.', boost: { psicologia: 1.5, estomatologia: 1.5, pedagogia: 0.9 } },
+            { key: 'B', text: 'Tener libertad para expresar tus ideas.', boost: { diseno_grafico: 1.6, arq_interiores: 1.5, animacion: 1.1 } },
+            { key: 'C', text: 'Sentir que estás haciendo algo importante para la sociedad.', boost: { pedagogia: 1.6, m_edu: 1.5, derecho: 1.4, criminologia: 1.3 } },
+            { key: 'D', text: 'Alcanzar objetivos y obtener resultados.', boost: { administracion: 1.5, finanzas: 1.5, comercio: 1.4, m_mba: 1.5 } },
+            { key: 'E', text: 'Descubrir cosas nuevas y superar retos.', boost: { software: 1.5, mecatronica: 1.5, ciberseguridad: 1.5, industrial: 1.3 } }
+          ]
+        },
+        {
+          id: 17,
+          category: 'Categoría 6 · Descubre tu motivación',
+          text: 'Si tuvieras que elegir una frase que te represente, ¿cuál sería?',
+          options: [
+            { key: 'A', text: 'Quiero hacer una diferencia en la vida de los demás.', boost: { psicologia: 1.6, estomatologia: 1.5, m_edu: 1.0 } },
+            { key: 'B', text: 'Las ideas pueden convertirse en grandes creaciones.', boost: { arquitectura: 1.6, diseno_grafico: 1.5, arq_interiores: 1.5 } },
+            { key: 'C', text: 'Siempre hay una razón detrás de cada situación.', boost: { criminologia: 1.7, derecho: 1.4, pedagogia: 1.1 } },
+            { key: 'D', text: 'Los grandes proyectos comienzan con una buena decisión.', boost: { administracion: 1.5, m_mba: 1.6, finanzas: 1.4, m_dir_edu: 1.3 } },
+            { key: 'E', text: 'El futuro se construye con innovación.', boost: { software: 1.5, mecatronica: 1.5, animacion: 1.4, ciberseguridad: 1.4 } }
+          ]
+        },
+        {
+          id: 18,
+          category: 'Categoría 6 · Descubre tu motivación',
+          text: '¿Qué te gustaría que las personas reconocieran de ti en el futuro?',
+          options: [
+            { key: 'A', text: 'Mi capacidad para cuidar y comprender a los demás.', boost: { estomatologia: 1.6, psicologia: 1.7 } },
+            { key: 'B', text: 'Mi creatividad y mi manera de ver el mundo.', boost: { diseno_grafico: 1.6, arq_interiores: 1.5, arquitectura: 1.4 } },
+            { key: 'C', text: 'Mi conocimiento, responsabilidad y sentido de justicia.', boost: { derecho: 1.7, m_juicios: 1.6, pedagogia: 1.4, m_edu: 1.3 } },
+            { key: 'D', text: 'Mi liderazgo y capacidad para alcanzar objetivos.', boost: { administracion: 1.6, m_mba: 1.6, m_dir_edu: 1.4, comercio: 1.3 } },
+            { key: 'E', text: 'Mi inteligencia para resolver problemas e innovar.', boost: { software: 1.5, ciberseguridad: 1.5, industrial: 1.5, mecatronica: 1.5 } }
+          ]
+        },
+
+        // Categoría 7. Gustos e intereses personales
+        {
+          id: 19,
+          category: 'Categoría 7 · Gustos e intereses personales',
+          text: 'Si pudieras participar en un proyecto escolar, ¿cuál elegirías?',
+          options: [
+            { key: 'A', text: 'Organizar una campaña de salud y bienestar.', boost: { estomatologia: 1.6, psicologia: 1.5 } },
+            { key: 'B', text: 'Diseñar un espacio o crear una identidad visual.', boost: { arq_interiores: 1.7, diseno_grafico: 1.7, arquitectura: 1.4 } },
+            { key: 'C', text: 'Investigar un problema de la comunidad.', boost: { criminologia: 1.5, pedagogia: 1.5, derecho: 1.3, m_edu: 1.3 } },
+            { key: 'D', text: 'Crear una empresa o emprendimiento.', boost: { administracion: 1.7, m_mba: 1.5, mercadotecnia: 1.4, comercio: 1.3 } },
+            { key: 'E', text: 'Desarrollar una aplicación o videojuego.', boost: { software: 1.8, animacion: 1.8 } }
+          ]
+        },
+        {
+          id: 20,
+          category: 'Categoría 7 · Gustos e intereses personales',
+          text: '¿Qué tipo de videos podrías ver durante horas?',
+          options: [
+            { key: 'A', text: 'Consejos de salud, psicología y cuidado personal.', boost: { psicologia: 1.6, estomatologia: 1.5 } },
+            { key: 'B', text: 'Transformaciones de espacios, ilustraciones y diseño.', boost: { arq_interiores: 1.8, diseno_grafico: 1.7, arquitectura: 1.3 } },
+            { key: 'C', text: 'Documentales de crímenes, historia y sociedad.', boost: { criminologia: 1.8, derecho: 1.2, lenguas: 1.1 } },
+            { key: 'D', text: 'Negocios, emprendimiento y estrategias de marketing.', boost: { mercadotecnia: 1.8, administracion: 1.5, m_mba: 1.4 } },
+            { key: 'E', text: 'Tecnología, videojuegos y programación.', boost: { animacion: 1.7, software: 1.7, ciberseguridad: 1.2 } }
+          ]
+        },
+        {
+          id: 21,
+          category: 'Categoría 7 · Gustos e intereses personales',
+          text: '¿Qué te gustaría hacer en tu tiempo libre?',
+          options: [
+            { key: 'A', text: 'Aprender sobre el cuerpo humano y las emociones.', boost: { estomatologia: 1.6, psicologia: 1.6 } },
+            { key: 'B', text: 'Dibujar, decorar o crear contenido visual.', boost: { diseno_grafico: 1.7, arq_interiores: 1.7, mercadotecnia: 1.1 } },
+            { key: 'C', text: 'Leer, investigar o aprender idiomas.', boost: { lenguas: 1.9, pedagogia: 1.3, criminologia: 1.3 } },
+            { key: 'D', text: 'Organizar actividades o vender algún producto.', boost: { eventos: 1.6, comercio: 1.6, mercadotecnia: 1.5 } },
+            { key: 'E', text: 'Experimentar con programas y herramientas digitales.', boost: { software: 1.6, ciberseguridad: 1.5, animacion: 1.4 } }
+          ]
+        },
+        {
+          id: 22,
+          category: 'Categoría 7 · Gustos e intereses personales',
+          text: 'Si pudieras viajar para conocer un lugar relacionado con tu profesión, ¿cuál sería?',
+          options: [
+            { key: 'A', text: 'Un hospital o centro de investigación médica.', boost: { estomatologia: 1.9, psicologia: 1.3 } },
+            { key: 'B', text: 'Un museo de arte, estudio de diseño o despacho arquitectónico.', boost: { arquitectura: 1.7, diseno_grafico: 1.6, arq_interiores: 1.5 } },
+            { key: 'C', text: 'Un tribunal, una escuela o una institución internacional.', boost: { derecho: 1.7, m_juicios: 1.7, pedagogia: 1.6, lenguas: 1.7, m_dir_edu: 1.4 } },
+            { key: 'D', text: 'Una empresa reconocida o una bolsa de valores.', boost: { finanzas: 1.9, m_finanzas: 1.8, administracion: 1.4, comercio: 1.4, contaduria: 1.3 } },
+            { key: 'E', text: 'Una empresa de tecnología o un centro de innovación.', boost: { software: 1.6, ciberseguridad: 1.5, mecatronica: 1.5, industrial: 1.4 } }
+          ]
+        },
+        {
+          id: 23,
+          category: 'Categoría 7 · Gustos e intereses personales',
+          text: '¿Qué tema te gustaría investigar por curiosidad?',
+          options: [
+            { key: 'A', text: '¿Cómo funciona el cerebro y el cuerpo humano?', boost: { estomatologia: 1.6, psicologia: 1.7 } },
+            { key: 'B', text: '¿Cómo influye el diseño en nuestra vida diaria?', boost: { arq_interiores: 1.6, diseno_grafico: 1.6, arquitectura: 1.5 } },
+            { key: 'C', text: '¿Por qué ocurren los conflictos sociales?', boost: { criminologia: 1.6, derecho: 1.4, pedagogia: 1.3 } },
+            { key: 'D', text: '¿Cómo se construye una empresa exitosa?', boost: { administracion: 1.7, m_mba: 1.7, mercadotecnia: 1.3, contaduria: 1.2 } },
+            { key: 'E', text: '¿Cómo se crean las aplicaciones y los videojuegos?', boost: { software: 1.8, animacion: 1.8 } }
+          ]
+        },
+
+        // Categoría 8. Tu forma de resolver problemas
+        {
+          id: 24,
+          category: 'Categoría 8 · Tu forma de resolver problemas',
+          text: 'Si un amigo tiene un problema personal, ¿qué harías?',
+          options: [
+            { key: 'A', text: 'Lo escucharía y trataría de comprenderlo.', boost: { psicologia: 1.8, estomatologia: 1.1 } },
+            { key: 'B', text: 'Buscaría una manera creativa de animarlo.', boost: { diseno_grafico: 1.4, arq_interiores: 1.4, eventos: 1.1 } },
+            { key: 'C', text: 'Analizaría la situación para darle un consejo.', boost: { derecho: 1.4, pedagogia: 1.5, criminologia: 1.3 } },
+            { key: 'D', text: 'Le ayudaría a organizar un plan para solucionarlo.', boost: { administracion: 1.5, contaduria: 1.3, m_logistica: 1.3 } },
+            { key: 'E', text: 'Buscaría herramientas o recursos que pudieran ayudarlo.', boost: { software: 1.4, industrial: 1.5, ciberseguridad: 1.3, mecatronica: 1.3 } }
+          ]
+        },
+        {
+          id: 25,
+          category: 'Categoría 8 · Tu forma de resolver problemas',
+          text: 'Si tu equipo tiene un proyecto y algo sale mal, ¿cómo reaccionarías?',
+          options: [
+            { key: 'A', text: 'Me preocuparía por el bienestar de mis compañeros.', boost: { psicologia: 1.6, estomatologia: 1.2 } },
+            { key: 'B', text: 'Propondría una idea diferente.', boost: { diseno_grafico: 1.5, arquitectura: 1.4, arq_interiores: 1.4 } },
+            { key: 'C', text: 'Investigaré qué fue lo que falló.', boost: { criminologia: 1.6, derecho: 1.3, contaduria: 1.0 } },
+            { key: 'D', text: 'Organizaría al equipo para resolverlo.', boost: { administracion: 1.6, eventos: 1.5, m_mba: 1.4, m_dir_edu: 1.3 } },
+            { key: 'E', text: 'Buscaría una solución técnica.', boost: { ciberseguridad: 1.5, software: 1.5, mecatronica: 1.6, industrial: 1.5 } }
+          ]
+        },
+        {
+          id: 26,
+          category: 'Categoría 8 · Tu forma de resolver problemas',
+          text: '¿Qué harías si encontraras un objeto que nadie reclama?',
+          options: [
+            { key: 'A', text: 'Pensaría si alguien puede necesitar ayuda para recuperarlo.', boost: { psicologia: 1.5, estomatologia: 1.3 } },
+            { key: 'B', text: 'Me preguntaría cómo podría reutilizarlo o transformarlo.', boost: { arq_interiores: 1.7, arquitectura: 1.5, diseno_grafico: 1.3 } },
+            { key: 'C', text: 'Buscaría al dueño y revisaría cómo identificarlo.', boost: { criminologia: 1.7, derecho: 1.4 } },
+            { key: 'D', text: 'Organizaría una manera de entregarlo.', boost: { m_logistica: 1.6, eventos: 1.5, administracion: 1.3 } },
+            { key: 'E', text: 'Investigaría si tiene alguna tecnología o función especial.', boost: { mecatronica: 1.7, ciberseguridad: 1.5, software: 1.3 } }
+          ]
+        },
+        {
+          id: 27,
+          category: 'Categoría 8 · Tu forma de resolver problemas',
+          text: 'Cuando tienes que tomar una decisión importante, ¿qué haces primero?',
+          options: [
+            { key: 'A', text: 'Pienso en cómo afectará a las personas.', boost: { psicologia: 1.6, estomatologia: 1.3, pedagogia: 1.0 } },
+            { key: 'B', text: 'Imagino diferentes posibilidades.', boost: { arquitectura: 1.5, diseno_grafico: 1.5, arq_interiores: 1.5 } },
+            { key: 'C', text: 'Investigo y comparo la información.', boost: { criminologia: 1.5, derecho: 1.5, lenguas: 1.1 } },
+            { key: 'D', text: 'Analizo los beneficios y resultados.', boost: { finanzas: 1.7, m_finanzas: 1.7, contaduria: 1.5, comercio: 1.4 } },
+            { key: 'E', text: 'Busco la solución más eficiente.', boost: { industrial: 1.8, m_logistica: 1.6, software: 1.5, ciberseguridad: 1.3 } }
+          ]
+        },
+        {
+          id: 28,
+          category: 'Categoría 8 · Tu forma de resolver problemas',
+          text: 'Si pudieras resolver un problema de tu ciudad, ¿cuál elegirías?',
+          options: [
+            { key: 'A', text: 'Mejorar la atención y orientación de salud.', boost: { estomatologia: 1.8, psicologia: 1.6 } },
+            { key: 'B', text: 'Crear espacios públicos más atractivos y funcionales.', boost: { arquitectura: 1.9, arq_interiores: 1.6 } },
+            { key: 'C', text: 'Reducir la inseguridad y mejorar la educación.', boost: { criminologia: 1.7, pedagogia: 1.7, m_edu: 1.6, m_dir_edu: 1.5, derecho: 1.3 } },
+            { key: 'D', text: 'Generar empleos y oportunidades económicas.', boost: { administracion: 1.5, comercio: 1.6, finanzas: 1.5, m_mba: 1.5 } },
+            { key: 'E', text: 'Mejorar los sistemas tecnológicos y la infraestructura.', boost: { ciberseguridad: 1.7, industrial: 1.7, mecatronica: 1.5, m_logistica: 1.4 } }
+          ]
+        },
+
+        // Categoría 9. Tu personalidad y manera de trabajar
+        {
+          id: 29,
+          category: 'Categoría 9 · Tu personalidad y manera de trabajar',
+          text: '¿Qué papel te gustaría tener dentro de un equipo?',
+          options: [
+            { key: 'A', text: 'Ser quien escucha y apoya.', boost: { psicologia: 1.7, estomatologia: 1.2 } },
+            { key: 'B', text: 'Ser quien aporta ideas originales.', boost: { diseno_grafico: 1.6, arq_interiores: 1.5, animacion: 1.2 } },
+            { key: 'C', text: 'Ser quien analiza y cuestiona.', boost: { derecho: 1.6, criminologia: 1.6, m_juicios: 1.5 } },
+            { key: 'D', text: 'Ser quien dirige y organiza.', boost: { administracion: 1.6, m_mba: 1.6, eventos: 1.5, m_dir_edu: 1.4 } },
+            { key: 'E', text: 'Ser quien encuentra soluciones técnicas.', boost: { software: 1.6, ciberseguridad: 1.6, mecatronica: 1.5, industrial: 1.4 } }
+          ]
+        },
+        {
+          id: 30,
+          category: 'Categoría 9 · Tu personalidad y manera de trabajar',
+          text: '¿Con cuál de estas frases te identificas más?',
+          options: [
+            { key: 'A', text: 'Me gusta sentir que puedo ayudar a alguien.', boost: { estomatologia: 1.5, psicologia: 1.6 } },
+            { key: 'B', text: 'Siempre encuentro una manera diferente de hacer las cosas.', boost: { diseno_grafico: 1.5, arq_interiores: 1.5, arquitectura: 1.4 } },
+            { key: 'C', text: 'Me gusta conocer la verdad antes de opinar.', boost: { criminologia: 1.7, derecho: 1.6, m_juicios: 1.5 } },
+            { key: 'D', text: 'Me gusta tener metas y trabajar para cumplirlas.', boost: { administracion: 1.5, finanzas: 1.5, contaduria: 1.4, comercio: 1.4 } },
+            { key: 'E', text: 'Me encanta descubrir cómo funcionan las cosas.', boost: { mecatronica: 1.7, software: 1.5, ciberseguridad: 1.4, industrial: 1.3 } }
+          ]
+        },
+        {
+          id: 31,
+          category: 'Categoría 9 · Tu personalidad y manera de trabajar',
+          text: '¿Qué tipo de actividad te resulta más emocionante?',
+          options: [
+            { key: 'A', text: 'Trabajar directamente con personas.', boost: { psicologia: 1.6, estomatologia: 1.5, pedagogia: 1.1 } },
+            { key: 'B', text: 'Crear algo desde cero.', boost: { arquitectura: 1.6, diseno_grafico: 1.6, arq_interiores: 1.5 } },
+            { key: 'C', text: 'Resolver un misterio o investigar.', boost: { criminologia: 1.9, derecho: 1.3 } },
+            { key: 'D', text: 'Coordinar un proyecto importante.', boost: { eventos: 1.7, administracion: 1.5, m_logistica: 1.5, m_dir_edu: 1.3 } },
+            { key: 'E', text: 'Construir o programar algo.', boost: { software: 1.7, mecatronica: 1.7, animacion: 1.4 } }
+          ]
+        },
+        {
+          id: 32,
+          category: 'Categoría 9 · Tu personalidad y manera de trabajar',
+          text: '¿Cómo te gustaría que fuera tu espacio de trabajo?',
+          options: [
+            { key: 'A', text: 'Un lugar tranquilo donde pueda atender personas.', boost: { psicologia: 1.7, estomatologia: 1.7 } },
+            { key: 'B', text: 'Un espacio lleno de ideas, colores y materiales.', boost: { arq_interiores: 1.8, diseno_grafico: 1.7, arquitectura: 1.4 } },
+            { key: 'C', text: 'Un lugar donde pueda leer, investigar y analizar.', boost: { derecho: 1.5, lenguas: 1.5, pedagogia: 1.4, criminologia: 1.4 } },
+            { key: 'D', text: 'Una oficina dinámica donde pueda organizar proyectos.', boost: { administracion: 1.5, mercadotecnia: 1.5, eventos: 1.5, comercio: 1.4 } },
+            { key: 'E', text: 'Un espacio con computadoras, herramientas y tecnología.', boost: { software: 1.6, ciberseguridad: 1.6, mecatronica: 1.6, animacion: 1.4 } }
+          ]
+        },
+        {
+          id: 33,
+          category: 'Categoría 9 · Tu personalidad y manera de trabajar',
+          text: '¿Qué característica consideras más importante en ti?',
+          options: [
+            { key: 'A', text: 'La empatía.', boost: { psicologia: 1.8, estomatologia: 1.3 } },
+            { key: 'B', text: 'La creatividad.', boost: { diseno_grafico: 1.6, arq_interiores: 1.6, arquitectura: 1.4, animacion: 1.2 } },
+            { key: 'C', text: 'La responsabilidad.', boost: { derecho: 1.5, pedagogia: 1.5, contaduria: 1.2, m_edu: 1.3 } },
+            { key: 'D', text: 'El liderazgo.', boost: { administracion: 1.7, m_mba: 1.7, m_dir_edu: 1.5, eventos: 1.4 } },
+            { key: 'E', text: 'La capacidad de análisis.', boost: { ciberseguridad: 1.6, industrial: 1.6, software: 1.5, m_finanzas: 1.2 } }
+          ]
+        },
+
+        // Categoría 10. Situaciones de la vida cotidiana
+        {
+          id: 34,
+          category: 'Categoría 10 · Situaciones de la vida cotidiana',
+          text: 'Si organizaras una actividad para tu escuela, ¿qué harías?',
+          options: [
+            { key: 'A', text: 'Una jornada de salud física y emocional.', boost: { estomatologia: 1.7, psicologia: 1.7 } },
+            { key: 'B', text: 'Una exposición artística o concurso de diseño.', boost: { diseno_grafico: 1.7, arq_interiores: 1.5, arquitectura: 1.4 } },
+            { key: 'C', text: 'Una conferencia sobre derechos y sociedad.', boost: { derecho: 1.7, m_juicios: 1.5, pedagogia: 1.4 } },
+            { key: 'D', text: 'Una feria de emprendimiento.', boost: { administracion: 1.6, eventos: 1.6, mercadotecnia: 1.5, comercio: 1.4 } },
+            { key: 'E', text: 'Una exposición de innovación tecnológica.', boost: { mecatronica: 1.6, software: 1.5, animacion: 1.5, ciberseguridad: 1.4 } }
+          ]
+        },
+        {
+          id: 35,
+          category: 'Categoría 10 · Situaciones de la vida cotidiana',
+          text: 'Si te regalaran un curso gratuito, ¿cuál escogerías?',
+          options: [
+            { key: 'A', text: 'Psicología y primeros auxilios.', boost: { psicologia: 1.7, estomatologia: 1.7 } },
+            { key: 'B', text: 'Diseño digital y arquitectura.', boost: { diseno_grafico: 1.7, arquitectura: 1.8, arq_interiores: 1.4 } },
+            { key: 'C', text: 'Derecho, idiomas o investigación criminal.', boost: { derecho: 1.7, lenguas: 1.8, criminologia: 1.8, m_juicios: 1.5 } },
+            { key: 'D', text: 'Administración y marketing.', boost: { administracion: 1.7, mercadotecnia: 1.8, m_mba: 1.5 } },
+            { key: 'E', text: 'Programación y robótica.', boost: { software: 1.8, mecatronica: 1.9 } }
+          ]
+        },
+        {
+          id: 36,
+          category: 'Categoría 10 · Situaciones de la vida cotidiana',
+          text: '¿Qué noticia te llamaría más la atención?',
+          options: [
+            { key: 'A', text: 'Un nuevo descubrimiento para mejorar la salud.', boost: { estomatologia: 1.8, psicologia: 1.4 } },
+            { key: 'B', text: 'Un proyecto arquitectónico innovador.', boost: { arquitectura: 1.9, arq_interiores: 1.6 } },
+            { key: 'C', text: 'Una investigación que ayude a resolver un problema social.', boost: { criminologia: 1.6, pedagogia: 1.5, derecho: 1.4, m_edu: 1.3 } },
+            { key: 'D', text: 'Una empresa que logró crecer internacionalmente.', boost: { comercio: 1.9, m_logistica: 1.6, administracion: 1.5, m_mba: 1.5 } },
+            { key: 'E', text: 'Un avance tecnológico que cambie nuestra vida.', boost: { software: 1.5, mecatronica: 1.6, ciberseguridad: 1.5, industrial: 1.4 } }
+          ]
+        },
+        {
+          id: 37,
+          category: 'Categoría 10 · Situaciones de la vida cotidiana',
+          text: 'Si tuvieras que crear un canal de contenido, ¿de qué hablarías?',
+          options: [
+            { key: 'A', text: 'Bienestar, salud y desarrollo personal.', boost: { psicologia: 1.7, estomatologia: 1.4 } },
+            { key: 'B', text: 'Arte, diseño, decoración y creatividad.', boost: { arq_interiores: 1.8, diseno_grafico: 1.7, arquitectura: 1.3 } },
+            { key: 'C', text: 'Casos interesantes, cultura e idiomas.', boost: { lenguas: 1.8, criminologia: 1.6, pedagogia: 1.2 } },
+            { key: 'D', text: 'Negocios, tendencias y emprendimiento.', boost: { mercadotecnia: 1.8, administracion: 1.5, finanzas: 1.4 } },
+            { key: 'E', text: 'Tecnología, videojuegos y programación.', boost: { animacion: 1.8, software: 1.8, ciberseguridad: 1.2 } }
+          ]
+        },
+        {
+          id: 38,
+          category: 'Categoría 10 · Situaciones de la vida cotidiana',
+          text: '¿Qué tipo de reto te gustaría experimentar?',
+          options: [
+            { key: 'A', text: 'Aprender a comprender mejor las necesidades de las personas.', boost: { psicologia: 1.7, estomatologia: 1.4 } },
+            { key: 'B', text: 'Diseñar algo que nunca se haya creado.', boost: { arquitectura: 1.6, diseno_grafico: 1.6, arq_interiores: 1.5 } },
+            { key: 'C', text: 'Defender una idea o resolver una investigación.', boost: { derecho: 1.7, m_juicios: 1.7, criminologia: 1.7 } },
+            { key: 'D', text: 'Lograr que un proyecto tenga éxito.', boost: { administracion: 1.5, eventos: 1.5, m_mba: 1.5, m_logistica: 1.4 } },
+            { key: 'E', text: 'Crear una solución tecnológica desde cero.', boost: { software: 1.7, mecatronica: 1.6, ciberseguridad: 1.5, industrial: 1.4 } }
+          ]
+        },
+
+        // Categoría 11. Tus metas y aspiraciones
+        {
+          id: 39,
+          category: 'Categoría 11 · Tus metas y aspiraciones',
+          text: '¿Cómo imaginas tu vida profesional dentro de diez años?',
+          options: [
+            { key: 'A', text: 'Ayudando a personas en su bienestar físico o emocional.', boost: { estomatologia: 1.6, psicologia: 1.6 } },
+            { key: 'B', text: 'Creando proyectos visuales, edificios o espacios.', boost: { arquitectura: 1.7, arq_interiores: 1.6, diseno_grafico: 1.6 } },
+            { key: 'C', text: 'Trabajando en instituciones, educación o justicia.', boost: { derecho: 1.6, pedagogia: 1.6, m_dir_edu: 1.6, m_edu: 1.5, m_juicios: 1.5 } },
+            { key: 'D', text: 'Dirigiendo una empresa o teniendo mi propio negocio.', boost: { administracion: 1.7, m_mba: 1.7, comercio: 1.4, contaduria: 1.3 } },
+            { key: 'E', text: 'Desarrollando tecnología e innovación.', boost: { software: 1.6, mecatronica: 1.6, ciberseguridad: 1.5, animacion: 1.4, industrial: 1.4 } }
+          ]
+        },
+        {
+          id: 40,
+          category: 'Categoría 11 · Tus metas y aspiraciones',
+          text: '¿Qué te gustaría aportar al mundo?',
+          options: [
+            { key: 'A', text: 'Una mejor calidad de vida para las personas.', boost: { estomatologia: 1.6, psicologia: 1.6 } },
+            { key: 'B', text: 'Nuevas formas de expresión y creación.', boost: { diseno_grafico: 1.7, arq_interiores: 1.5, arquitectura: 1.4, animacion: 1.2 } },
+            { key: 'C', text: 'Una sociedad más justa y preparada.', boost: { derecho: 1.6, pedagogia: 1.7, m_edu: 1.6, m_juicios: 1.5, lenguas: 1.2 } },
+            { key: 'D', text: 'Más oportunidades de crecimiento económico.', boost: { finanzas: 1.6, m_finanzas: 1.6, comercio: 1.6, contaduria: 1.5, administracion: 1.5 } },
+            { key: 'E', text: 'Soluciones que faciliten la vida mediante la tecnología.', boost: { software: 1.6, industrial: 1.6, mecatronica: 1.6, ciberseguridad: 1.5, m_logistica: 1.4 } }
+          ]
+        }
+      ];
+
+      /* ============================================================
+         ESTADO Y ELEMENTOS DEL DOM
+         ============================================================ */
+      let currentIndex = 0;
+      let isAnimating = false;
+      let cachedScores = [];
+      const answers = new Array(QUESTIONS.length).fill(null);
+
+      const welcomeView = document.getElementById('welcome-view');
+      const quizView = document.getElementById('quiz-view');
+      const resultsView = document.getElementById('results-view');
+
+      const startBtn = document.getElementById('start-btn');
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const retakeBtn = document.getElementById('retake-btn');
+      const printBtn = document.getElementById('print-btn');
+
+      const progressStepLabel = document.getElementById('progress-step-label');
+      const progressAnsweredLabel = document.getElementById('progress-answered-label');
+      const progressFill = document.getElementById('progress-fill');
+      const progressBarRole = document.getElementById('progress-bar-role');
+
+      const questionCard = document.getElementById('question-card');
+      const categoryPill = document.getElementById('category-pill');
+      const questionNumber = document.getElementById('question-number');
+      const questionText = document.getElementById('question-text');
+      const optionsList = document.getElementById('options-list');
+      const validationMsg = document.getElementById('validation-msg');
+
+      const primaryAreaBadge = document.getElementById('primary-area-badge');
+      const primaryRingContainer = document.getElementById('primary-ring-container');
+      const primaryCareerTitle = document.getElementById('primary-career-title');
+      const primaryTraitsList = document.getElementById('primary-traits-list');
+      const primaryCareerDesc = document.getElementById('primary-career-desc');
+      const primaryCareerLink = document.getElementById('primary-career-link');
+      const secondaryGrid = document.getElementById('secondary-grid');
+
+      /* ============================================================
+         ACTUALIZACIÓN DE PROGRESO Y RENDERIZADO DE PREGUNTAS
+         ============================================================ */
+      function getAnsweredCount() {
+        return answers.filter((a) => a !== null).length;
+      }
+
+      function updateProgressBar() {
+        const total = QUESTIONS.length;
+        const answered = getAnsweredCount();
+        const pct = Math.round((answered / total) * 100);
+
+        progressStepLabel.textContent = `Pregunta ${currentIndex + 1} de ${total}`;
+        progressAnsweredLabel.textContent = `${answered} de ${total} contestadas (${pct}%)`;
+        progressFill.style.width = `${pct}%`;
+        progressBarRole.setAttribute('aria-valuenow', String(answered));
+      }
+
+      function renderQuestion(index) {
+        const q = QUESTIONS[index];
+        const selectedKey = answers[index];
+
+        categoryPill.textContent = q.category;
+        questionNumber.textContent = `Pregunta ${q.id} de ${QUESTIONS.length}`;
+        questionText.textContent = q.text;
+        validationMsg.classList.remove('visible');
+
+        optionsList.innerHTML = '';
+
+        q.options.forEach((opt) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'option-btn' + (selectedKey === opt.key ? ' selected' : '');
+          btn.setAttribute('role', 'radio');
+          btn.setAttribute('aria-checked', selectedKey === opt.key ? 'true' : 'false');
+          btn.dataset.key = opt.key;
+
+          btn.innerHTML = `
+            <span class="option-letter">${opt.key}</span>
+            <span class="option-label">${opt.text}</span>
+            <span class="option-check" aria-hidden="true">✓</span>
+          `;
+
+          btn.addEventListener('click', () => selectOption(opt.key));
+          optionsList.appendChild(btn);
+        });
+
+        prevBtn.disabled = index === 0;
+        nextBtn.innerHTML =
+          index === QUESTIONS.length - 1
+            ? 'Ver resultados <span aria-hidden="true">✓</span>'
+            : 'Siguiente <span aria-hidden="true">→</span>';
+
+        updateProgressBar();
+      }
+
+      function selectOption(key) {
+        answers[currentIndex] = key;
+        validationMsg.classList.remove('visible');
+
+        const buttons = optionsList.querySelectorAll('.option-btn');
+        buttons.forEach((btn) => {
+          const isSelected = btn.dataset.key === key;
+          btn.classList.toggle('selected', isSelected);
+          btn.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+        });
+
+        updateProgressBar();
+      }
+
+      /* Transición animada de tarjeta hacia un lado */
+      function transitionToQuestion(targetIndex, direction) {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        const outClass = direction === 'next' ? 'slide-out-left' : 'slide-out-right';
+        const inClass = direction === 'next' ? 'slide-in-right' : 'slide-in-left';
+
+        questionCard.classList.remove('slide-out-left', 'slide-in-right', 'slide-out-right', 'slide-in-left', 'shake');
+        questionCard.classList.add(outClass);
+
+        window.setTimeout(() => {
+          currentIndex = targetIndex;
+          renderQuestion(currentIndex);
+
+          questionCard.classList.remove(outClass);
+          void questionCard.offsetWidth; // Reflow para reiniciar animación limpiamente
+          questionCard.classList.add(inClass);
+
+          window.setTimeout(() => {
+            questionCard.classList.remove(inClass);
+            isAnimating = false;
+          }, 340);
+        }, 310);
+      }
+
+      /* ============================================================
+         CÁLCULO DE COMPATIBILIDAD POR CARRERA
+         ============================================================ */
+      function getOptionScoreForCareer(question, option, career) {
+        const base = career.areaWeights[option.key] || 0;
+        const boost = (option.boost && option.boost[career.id]) ? option.boost[career.id] : 0;
+        return base + boost;
+      }
+
+      function calculateResults() {
+        const results = CAREERS.map((career) => {
+          let earned = 0;
+          let maxPossible = 0;
+
+          QUESTIONS.forEach((q, idx) => {
+            let maxForQ = 0;
+            q.options.forEach((opt) => {
+              const val = getOptionScoreForCareer(q, opt, career);
+              if (val > maxForQ) maxForQ = val;
+            });
+            maxPossible += maxForQ;
+
+            const chosenKey = answers[idx];
+            if (chosenKey) {
+              const chosenOpt = q.options.find((o) => o.key === chosenKey);
+              if (chosenOpt) {
+                earned += getOptionScoreForCareer(q, chosenOpt, career);
+              }
+            }
+          });
+
+          const rawRatio = maxPossible > 0 ? earned / maxPossible : 0;
+          const percentage = Math.max(5, Math.min(99, Math.round(rawRatio * 100)));
+
+          return {
+            career,
+            earned,
+            percentage
+          };
+        });
+
+        // Ordenar de mayor a menor afinidad
+        results.sort((a, b) => {
+          if (b.percentage !== a.percentage) return b.percentage - a.percentage;
+          return b.earned - a.earned;
+        });
+
+        return results;
+      }
+
+      function getCompatibilityLabel(percent) {
+        if (percent >= 80) return 'Muy alta';
+        if (percent >= 62) return 'Alta';
+        if (percent >= 42) return 'Media';
+        return 'Moderada';
+      }
+
+      /* ============================================================
+         GRÁFICA DE BARRA CIRCULAR (SVG) ESTILO MODERNO
+         ============================================================ */
+      function createCircularRingSVG(percent, options) {
+        const {
+          size,
+          strokeWidth,
+          gradientId,
+          colorStart,
+          colorEnd,
+          isHero
+        } = options;
+
+        const radius = (size - strokeWidth) / 2;
+        const circumference = 2 * Math.PI * radius;
+        const targetOffset = circumference - (percent / 100) * circumference;
+        const levelText = getCompatibilityLabel(percent);
+
+        const container = document.createElement('div');
+        container.style.width = '100%';
+        container.style.height = '100%';
+        container.style.position = 'relative';
+
+        container.innerHTML = `
+          <svg class="ring-svg" viewBox="0 0 ${size} ${size}" aria-hidden="true">
+            <defs>
+              <linearGradient id="${gradientId}" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="${colorStart}" />
+                <stop offset="100%" stop-color="${colorEnd}" />
+              </linearGradient>
+            </defs>
+            <circle
+              class="ring-track"
+              cx="${size / 2}"
+              cy="${size / 2}"
+              r="${radius}"
+              stroke-width="${strokeWidth}"
+            />
+            <circle
+              class="ring-progress"
+              cx="${size / 2}"
+              cy="${size / 2}"
+              r="${radius}"
+              stroke="url(#${gradientId})"
+              stroke-width="${strokeWidth}"
+              stroke-dasharray="${circumference.toFixed(2)}"
+              stroke-dashoffset="${circumference.toFixed(2)}"
+              data-target-offset="${targetOffset.toFixed(2)}"
+            />
+          </svg>
+          <div class="ring-center-content">
+            <span class="${isHero ? 'ring-hero-percent' : 'ring-mini-percent'}">${percent}%</span>
+            <span class="${isHero ? 'ring-hero-level' : 'ring-mini-level'}">${levelText}</span>
+          </div>
+        `;
+
+        return container;
+      }
+
+      function animateAllRings() {
+        const rings = resultsView.querySelectorAll('.ring-progress');
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            rings.forEach((circle) => {
+              circle.style.strokeDashoffset = circle.dataset.targetOffset;
+            });
+          });
+        });
+      }
+
+      function renderResultsView() {
+        const topResult = cachedScores[0];
+        const otherSix = cachedScores.slice(1, 7);
+
+        // 1. Carrera principal en grande
+        primaryAreaBadge.textContent = topResult.career.area;
+        primaryCareerTitle.textContent = topResult.career.name;
+        primaryCareerDesc.textContent = topResult.career.description;
+        primaryCareerLink.href = topResult.career.url;
+
+        primaryRingContainer.innerHTML = '';
+        primaryRingContainer.appendChild(
+          createCircularRingSVG(topResult.percentage, {
+            size: 214,
+            strokeWidth: 20,
+            gradientId: 'heroRingGrad',
+            colorStart: '#232f5c',
+            colorEnd: '#5a75c4',
+            isHero: true
+          })
+        );
+
+        primaryTraitsList.innerHTML = '';
+        topResult.career.traits.forEach((trait) => {
+          const pill = document.createElement('span');
+          pill.className = 'trait-pill';
+          pill.innerHTML = `<span class="trait-check" aria-hidden="true">✓</span> ${trait}`;
+          primaryTraitsList.appendChild(pill);
+        });
+
+        // 2. Otras 6 carreras compatibles en gráficas de círculos
+        const ringPalettes = [
+          ['#232f5c', '#3e5494'],
+          ['#2c3b73', '#4e67b0'],
+          ['#3e5494', '#657ec7'],
+          ['#232f5c', '#4a62a8'],
+          ['#324480', '#5b74bf'],
+          ['#3e5494', '#748cd1']
+        ];
+
+        secondaryGrid.innerHTML = '';
+        otherSix.forEach((item, idx) => {
+          const palette = ringPalettes[idx % ringPalettes.length];
+          const card = document.createElement('a');
+          card.className = 'mini-career-card';
+          card.href = item.career.url;
+          card.target = '_blank';
+          card.rel = 'noopener noreferrer';
+
+          const ringWrap = document.createElement('div');
+          ringWrap.className = 'ring-mini-container';
+          ringWrap.appendChild(
+            createCircularRingSVG(item.percentage, {
+              size: 118,
+              strokeWidth: 12,
+              gradientId: `miniRingGrad-${idx}`,
+              colorStart: palette[0],
+              colorEnd: palette[1],
+              isHero: false
+            })
+          );
+
+          const nameEl = document.createElement('h4');
+          nameEl.className = 'mini-career-name';
+          nameEl.textContent = item.career.name;
+
+          const areaEl = document.createElement('span');
+          areaEl.className = 'mini-career-area';
+          areaEl.textContent = item.career.area;
+
+          const linkEl = document.createElement('span');
+          linkEl.className = 'mini-career-link';
+          linkEl.innerHTML = 'Ver carrera <span aria-hidden="true">↗</span>';
+
+          card.appendChild(ringWrap);
+          card.appendChild(nameEl);
+          card.appendChild(areaEl);
+          card.appendChild(linkEl);
+          secondaryGrid.appendChild(card);
+        });
+
+        animateAllRings();
+      }
+
+      /* ============================================================
+         EVENTOS DE NAVEGACIÓN
+         ============================================================ */
+      startBtn.addEventListener('click', () => {
+        welcomeView.classList.add('hidden');
+        quizView.classList.remove('hidden');
+        renderQuestion(0);
+      });
+
+      prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+          transitionToQuestion(currentIndex - 1, 'prev');
+        }
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (isAnimating) return;
+
+        if (!answers[currentIndex]) {
+          validationMsg.classList.add('visible');
+          questionCard.classList.remove('shake');
+          void questionCard.offsetWidth;
+          questionCard.classList.add('shake');
+          return;
+        }
+
+        if (currentIndex < QUESTIONS.length - 1) {
+          transitionToQuestion(currentIndex + 1, 'next');
+        } else {
+          // Finalizar test y mostrar resultados
+          cachedScores = calculateResults();
+          quizView.classList.add('hidden');
+          resultsView.classList.remove('hidden');
+          renderResultsView();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+
+      retakeBtn.addEventListener('click', () => {
+        answers.fill(null);
+        currentIndex = 0;
+        resultsView.classList.add('hidden');
+        quizView.classList.remove('hidden');
+        renderQuestion(0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      printBtn.addEventListener('click', () => {
+        window.print();
+      });
+
+      // Soporte de teclado para agilidad (A-E para responder, Enter para avanzar)
+      document.addEventListener('keydown', (e) => {
+        if (quizView.classList.contains('hidden') || isAnimating) return;
+
+        const keyUpper = e.key.toUpperCase();
+        if (['A', 'B', 'C', 'D', 'E'].includes(keyUpper)) {
+          selectOption(keyUpper);
+        } else if (e.key === 'Enter' && answers[currentIndex]) {
+          e.preventDefault();
+          nextBtn.click();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
